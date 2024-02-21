@@ -24,7 +24,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`font-sans ${inter.variable}`}>
         <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
-          <div>
+          <div className="max-w-200">
             <TRPCReactProvider>{children}</TRPCReactProvider>
           </div>
         </main>

@@ -10,6 +10,10 @@ export default {
       },
       spacing: {
         "25": "100px",
+        "200": "800px",
+      },
+      maxWidth: {
+        "200": "800px",
       },
     },
   },
