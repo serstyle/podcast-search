@@ -3,6 +3,7 @@ import "~/styles/globals.css";
 import { Inter } from "next/font/google";
 
 import { TRPCReactProvider } from "~/trpc/react";
+import { Suspense } from "react";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -25,7 +26,9 @@ export default function RootLayout({
       <body className={`font-sans ${inter.variable}`}>
         <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
           <div className="max-w-200">
-            <TRPCReactProvider>{children}</TRPCReactProvider>
+            <Suspense>
+              <TRPCReactProvider>{children}</TRPCReactProvider>
+            </Suspense>
           </div>
         </main>
       </body>
