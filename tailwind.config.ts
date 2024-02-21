@@ -8,6 +8,9 @@ export default {
       fontFamily: {
         sans: ["var(--font-sans)", ...fontFamily.sans],
       },
+      spacing: {
+        "25": "100px",
+      },
     },
   },
   plugins: [],

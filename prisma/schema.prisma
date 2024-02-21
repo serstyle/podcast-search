@@ -18,3 +18,30 @@ model Post {
 
     @@index([name])
 }
+
+model Podcast {
+    id                  Int      @id @default(autoincrement())
+    podcast_external_id Int      @unique
+    name                String
+    createdAt           DateTime @default(now())
+    updatedAt           DateTime @updatedAt
+}
+
+model User {
+    id        Int      @id @default(autoincrement())
+    user_uuid String   @unique
+    name      String?
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model Assoc_Post_User {
+    id         Int      @id @default(autoincrement())
+    podcast_id Int
+    user_id    Int
+    createdAt  DateTime @default(now())
+    updatedAt  DateTime @updatedAt
+
+    @@index([podcast_id])
+    @@index([user_id])
+}
