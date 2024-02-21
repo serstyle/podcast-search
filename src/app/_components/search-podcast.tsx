@@ -1,9 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { type FormEvent, useCallback, useState } from "react";
-
-import { api } from "~/trpc/react";
 import { searchPodcastByQuery } from "../actions/podcast";
 import { type ApiResponse } from "podcastdx-client/dist/src/types";
 import Image from "next/image";
