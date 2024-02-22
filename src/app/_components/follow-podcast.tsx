@@ -20,9 +20,7 @@ const FollowPodcastCta = ({
   const user = useAuth();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  useEffect(() => {
-    setLoading(false);
-  }, []);
+
   const toggleFollowPodcast = useCallback(async () => {
     setLoading(true);
     if (isFollow) {
