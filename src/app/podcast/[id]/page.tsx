@@ -2,7 +2,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import FollowPodcastCta from "~/app/_components/follow-podcast";
-import { getPodcastByPodcastIdAndUserId } from "~/app/actions/follow-podcast";
 
 import {
   searchEpisodesByPodcastId,
@@ -25,8 +24,6 @@ export default async function Podcast({ params }: { params: { id: string } }) {
   }
 
   const episodes = await searchEpisodesByPodcastId(podcastId);
-
-  const podcastAttachedToUser = await getPodcastByPodcastIdAndUserId(podcastId);
 
   return (
     <div className="flex flex-col px-4 pb-12 pt-16">
@@ -57,7 +54,6 @@ export default async function Podcast({ params }: { params: { id: string } }) {
             podcastName={podcast.feed.title}
             podcastId={podcast.feed.id}
             podcastImage={podcast.feed.image}
-            isFollow={!!podcastAttachedToUser}
           />
         )}
       </div>

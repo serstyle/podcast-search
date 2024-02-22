@@ -1,48 +1,63 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useMemo } from "react";
 import { useAuth } from "~/hooks/useAuth";
-import { followPodcast, unFollowPodcast } from "../actions/follow-podcast";
-import { useRouter } from "next/navigation";
 
+import { useRouter } from "next/navigation";
+import { api } from "~/trpc/react";
 interface Props {
   podcastId: number;
   podcastName: string;
   podcastImage: string;
-  isFollow: boolean;
 }
-const FollowPodcastCta = ({
-  podcastId,
-  podcastName,
-  podcastImage,
-  isFollow,
-}: Props) => {
-  const user = useAuth();
+const FollowPodcastCta = ({ podcastId, podcastName, podcastImage }: Props) => {
+  useAuth();
+  const utils = api.useUtils();
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
+  const podcastRelation = api.userPodcasts.getByPodcastAndUser.useQuery({
+    external_id: podcastId,
+  });
+  const isFollow = useMemo(
+    () => !!podcastRelation.data,
+    [podcastRelation.data],
+  );
+
+  const unFollowPodcast = api.userPodcasts.delete.useMutation({
+    onSuccess: async () => {
+      await utils.userPodcasts.invalidate();
+      router.refresh();
+    },
+  });
+  const followPodcast = api.userPodcasts.create.useMutation({
+    onSuccess: async () => {
+      await utils.userPodcasts.invalidate();
+      router.refresh();
+    },
+  });
 
   const toggleFollowPodcast = useCallback(async () => {
-    setLoading(true);
     if (isFollow) {
-      await unFollowPodcast(podcastId);
+      unFollowPodcast.mutate({ external_id: podcastId });
     } else {
-      await followPodcast(
-        {
-          podcast_external_id: podcastId,
-          name: podcastName,
-          image: podcastImage,
-        },
-        user?.id,
-      );
+      followPodcast.mutate({
+        podcast_external_id: podcastId,
+        podcast_name: podcastName,
+        podcast_image: podcastImage,
+      });
     }
-    router.refresh();
-    setLoading(false);
-  }, [isFollow, podcastId, podcastImage, podcastName, router, user?.id]);
+  }, [
+    followPodcast,
+    isFollow,
+    podcastId,
+    podcastImage,
+    podcastName,
+    unFollowPodcast,
+  ]);
 
   return (
     <button
       onClick={toggleFollowPodcast}
-      disabled={loading}
+      disabled={followPodcast.isLoading || unFollowPodcast.isLoading}
       className={`rounded-full bg-white/20 px-4 py-2 transition hover:bg-white/10 hover:no-underline ${isFollow && "bg-white/40"} disabled:bg-gray-500`}
     >
       {isFollow ? "Following" : "+ Follow"}
