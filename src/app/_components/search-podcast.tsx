@@ -5,6 +5,9 @@ import { searchPodcastByQuery } from "../actions/podcast";
 import { type ApiResponse } from "podcastdx-client/dist/src/types";
 import Image from "next/image";
 import Link from "next/link";
+import { ChevronRightIcon } from "~/components/Icon/Chevron";
+import Card from "~/components/Card";
+import { getTruncatedText } from "~/utils";
 
 export function SearchPodcast() {
   const [searchInput, setSearchInput] = useState("");
@@ -20,33 +23,33 @@ export function SearchPodcast() {
     [searchInput],
   );
 
-  const getTruncatedText = (text: string, length: number) => {
-    if (text.length > length) return text.slice(0, length) + "...";
-    return text;
-  };
-
   return (
     <div>
-      <form onSubmit={searchPodcast} className="mb-8 flex flex-col gap-2">
-        <input
-          type="text"
-          placeholder="Title"
-          value={searchInput}
-          onChange={(e) => setSearchInput(e.target.value)}
-          className="w-full rounded-full px-4 py-2 text-black"
-        />
-        <button
-          type="submit"
-          className="rounded-full bg-white/10 px-10 py-3 font-semibold transition hover:bg-white/20 hover:no-underline"
+      <div className="flex justify-center ">
+        <form
+          onSubmit={searchPodcast}
+          className="mb-8 flex w-full flex-col gap-2 md:w-96"
         >
-          Search
-        </button>
-      </form>
+          <input
+            type="text"
+            placeholder="Search podcast... e.g. 'Javascript'"
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+            className="w-full rounded-full px-4 py-2 text-black"
+          />
+          <button
+            type="submit"
+            className="rounded-full bg-white/10 px-10 py-3 font-semibold transition hover:bg-white/20 hover:no-underline"
+          >
+            Search
+          </button>
+        </form>
+      </div>
       {podcasts && (
         <div>
           {podcasts.count > 0 ? (
             podcasts.feeds.map((podcast) => (
-              <div key={podcast.id} className="mb-3">
+              <Card key={podcast.id}>
                 <Link href={`/podcast/${podcast.id}`}>
                   <div className="flex items-center gap-4">
                     <div className="min-h-20 min-w-20">
@@ -65,9 +68,12 @@ export function SearchPodcast() {
                         {getTruncatedText(podcast.author, 80)}
                       </p>
                     </div>
+                    <div className="ml-auto">
+                      <ChevronRightIcon />
+                    </div>
                   </div>
                 </Link>
-              </div>
+              </Card>
             ))
           ) : (
             <p>No podcast found.</p>

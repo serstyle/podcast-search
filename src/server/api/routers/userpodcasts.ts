@@ -6,9 +6,6 @@ export const userPodcastsRouter = createTRPCRouter({
   create: publicProcedure
     .input(z.object({ user_id: z.number(), podcast_id: z.number() }))
     .mutation(async ({ ctx, input }) => {
-      // simulate a slow db call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
       return ctx.db.assoc_Post_User.create({
         data: {
           user_id: input.user_id,
@@ -19,9 +16,6 @@ export const userPodcastsRouter = createTRPCRouter({
   delete: publicProcedure
     .input(z.object({ relation_id: z.number() }))
     .mutation(async ({ ctx, input }) => {
-      // simulate a slow db call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
       return ctx.db.assoc_Post_User.delete({
         where: {
           id: input.relation_id,

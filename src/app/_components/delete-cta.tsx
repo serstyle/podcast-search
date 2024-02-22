@@ -11,7 +11,7 @@ const DeleteCta = ({ id }: { id: number }) => {
   }, [id, router]);
   return (
     <button
-      className="rounded-full bg-white/20 px-4 py-2 transition hover:bg-white/10 hover:no-underline"
+      className="h-10 rounded-full bg-white/20 px-4 py-2 transition hover:bg-white/10 hover:no-underline"
       onClick={onUnfollow}
     >
       -

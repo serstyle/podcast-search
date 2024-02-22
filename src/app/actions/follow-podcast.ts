@@ -4,7 +4,7 @@ import { cookies } from "next/headers";
 import { api } from "~/trpc/server";
 
 export const followPodcast = async (
-  podcast: { podcast_external_id: number; name: string },
+  podcast: { podcast_external_id: number; name: string; image: string },
   user_id?: number,
 ) => {
   if (!user_id) {
@@ -19,9 +19,16 @@ export const followPodcast = async (
     const res = await api.podcast.create.mutate({
       name: podcast.name,
       podcast_external_id: podcast.podcast_external_id,
+      image: podcast.image,
     });
     podcastId = res.id;
   }
+
+  const isAlreadyFollowed = await api.userPodcasts.getByPodcastAndUser.query({
+    podcast_id: podcastId,
+    user_id: user_id,
+  });
+  if (!!isAlreadyFollowed) return;
 
   return await api.userPodcasts.create.mutate({
     user_id,

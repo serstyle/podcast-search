@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useAuth } from "~/hooks/useAuth";
 import { followPodcast, unFollowPodcast } from "../actions/follow-podcast";
 import { useRouter } from "next/navigation";
@@ -8,12 +8,21 @@ import { useRouter } from "next/navigation";
 interface Props {
   podcastId: number;
   podcastName: string;
+  podcastImage: string;
   isFollow: boolean;
 }
-const FollowPodcastCta = ({ podcastId, podcastName, isFollow }: Props) => {
+const FollowPodcastCta = ({
+  podcastId,
+  podcastName,
+  podcastImage,
+  isFollow,
+}: Props) => {
   const user = useAuth();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    setLoading(false);
+  }, []);
   const toggleFollowPodcast = useCallback(async () => {
     setLoading(true);
     if (isFollow) {
@@ -23,13 +32,14 @@ const FollowPodcastCta = ({ podcastId, podcastName, isFollow }: Props) => {
         {
           podcast_external_id: podcastId,
           name: podcastName,
+          image: podcastImage,
         },
         user?.id,
       );
     }
     router.refresh();
     setLoading(false);
-  }, [isFollow, podcastId, podcastName, router, user?.id]);
+  }, [isFollow, podcastId, podcastImage, podcastName, router, user?.id]);
 
   return (
     <button
