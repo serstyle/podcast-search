@@ -22,12 +22,14 @@ const FollowPodcastCta = ({ podcastId, podcastName, podcastImage }: Props) => {
 
   const unFollowPodcast = api.userPodcasts.delete.useMutation({
     onSuccess: async () => {
-      await utils.userPodcasts.invalidate();
+      await utils.userPodcasts.getPodcastsByUser.refetch();
+      await utils.userPodcasts.getByPodcastAndUser.refetch();
     },
   });
   const followPodcast = api.userPodcasts.create.useMutation({
     onSuccess: async () => {
-      await utils.userPodcasts.invalidate();
+      await utils.userPodcasts.getPodcastsByUser.refetch();
+      await utils.userPodcasts.getByPodcastAndUser.refetch();
     },
   });
 
