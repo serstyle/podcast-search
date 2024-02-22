@@ -1,13 +1,12 @@
 "use client";
 import { useCallback } from "react";
-import { useRouter } from "next/navigation";
 import { api } from "~/trpc/react";
 
 const DeleteCta = ({ id }: { id: number }) => {
-  const router = useRouter();
+  const utils = api.useUtils();
   const unFollowPodcast = api.userPodcasts.delete.useMutation({
     onSuccess: async () => {
-      router.refresh();
+      await utils.userPodcasts.invalidate();
     },
   });
   const onClickUnfollow = useCallback(() => {

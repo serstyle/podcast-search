@@ -3,7 +3,6 @@
 import { useCallback, useMemo } from "react";
 import { useAuth } from "~/hooks/useAuth";
 
-import { useRouter } from "next/navigation";
 import { api } from "~/trpc/react";
 interface Props {
   podcastId: number;
@@ -13,7 +12,6 @@ interface Props {
 const FollowPodcastCta = ({ podcastId, podcastName, podcastImage }: Props) => {
   useAuth();
   const utils = api.useUtils();
-  const router = useRouter();
   const podcastRelation = api.userPodcasts.getByPodcastAndUser.useQuery({
     external_id: podcastId,
   });
@@ -25,13 +23,11 @@ const FollowPodcastCta = ({ podcastId, podcastName, podcastImage }: Props) => {
   const unFollowPodcast = api.userPodcasts.delete.useMutation({
     onSuccess: async () => {
       await utils.userPodcasts.invalidate();
-      router.refresh();
     },
   });
   const followPodcast = api.userPodcasts.create.useMutation({
     onSuccess: async () => {
       await utils.userPodcasts.invalidate();
-      router.refresh();
     },
   });
 
